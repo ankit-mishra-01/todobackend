@@ -13,6 +13,7 @@ import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
 dotenv.config()
 const app=express()
 const PORT=process.env.PORT || 8000
+const BASE_URL = process.env.BASE_URL || "http://localhost:8000";
 const DATABASE_URL=process.env.DATABASE_URL ||"mongodb://localhost:27017"
 
 
@@ -41,7 +42,6 @@ app.use('/',adminRouter);
 app.use('/',todoRouter);
 
 
-console.log('baseurl----',process.env.BASE_URL);
 // Start app
 app.listen(PORT,()=>{
         console.log('Backend/Server is running on port ',PORT);
