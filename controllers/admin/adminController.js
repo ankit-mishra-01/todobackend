@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import bcrypt from "bcrypt";
 import { Employee, EmployeeImage } from "../../models/Employee.js";
 
@@ -44,13 +43,11 @@ export const getEmployees = async (req, res) => {
 export const deleteEmployee = async (req, res) => {
   const { email } = req.params;
   const deletedEmployee = await Employee.findOneAndDelete({ email });
-  res
-    .status(201)
-    .json({
-      status: "success",
-      message: "Deleted the employee",
-      deletedEmployee,
-    });
+  res.status(201).json({
+    status: "success",
+    message: "Deleted the employee",
+    deletedEmployee,
+  });
 };
 export const getDashboardData = async (req, res) => {
   var dashboardData = {};
