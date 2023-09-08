@@ -4,7 +4,9 @@ const dataFieldsForFrontend=[
 "_id","title","text","status","createdAt"].join(" ")
 
 export const getTodos = async (req, res) => {
-  const todos = await Todo.find({},dataFieldsForFrontend);
+  console.log("running----------1");
+  const todos = await Todo.find({}, dataFieldsForFrontend);
+  console.log("running----------2");
   todos && res.status(200).json(todos);
 };
 

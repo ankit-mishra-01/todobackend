@@ -17,7 +17,6 @@ export const getEmployees = async (req, res) => {
       )
         .then((data) => (employees = data))
         .catch((e) => console.log("error", e));
-      console.log("named search,", req.params.name);
     } else {
       await Employee.find({}, "-password -terms")
         .then((data) => (employees = data))
@@ -29,6 +28,36 @@ export const getEmployees = async (req, res) => {
         const image = await EmployeeImage.findOne({ employee: employee._id });
         return {
           ...employee._doc,
+          image: image ? image.image : null,
+        };
+      })
+    );
+    console.log("employees data with images", employeeDataWithEmployeeImages);
+    res.status(200).json(employeeDataWithEmployeeImages);
+  } catch (e) {
+    res.status(400).json({ message: "error", error: e });
+  }
+};
+
+export const getEmployee = async (req, res) => {
+  var employee;
+  try {
+    const { id } = req.params;
+    if (id) {
+      await Employee.find({ id }, "-password -terms")
+        .then((data) => (employee = data))
+        .catch((e) => console.log("error", e));
+    } else {
+      await Employee.find({ id }, "-password -terms")
+        .then((data) => (employee = data))
+        .catch((e) => console.log("error", e));
+    }
+
+    const employeeDataWithEmployeeImages = await Promise.all(
+      employee.map(async (emp) => {
+        const image = await EmployeeImage.findOne({ employee: emp._id });
+        return {
+          ...emp._doc,
           image: image ? image.image : null,
         };
       })

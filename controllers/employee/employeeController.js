@@ -4,9 +4,7 @@ import jwt from "jsonwebtoken";
 
 export const createEmployee = async (req, res) => {
   try {
-    const { name, email, password,image, terms } = req.body;
-    console.log('');
-
+    const { name, email, password, image, terms } = req.body;
     // Check if the email already exists
     const existingEmployee = await Employee.findOne({ email });
     if (existingEmployee) {
@@ -28,8 +26,6 @@ export const createEmployee = async (req, res) => {
     // Save the employee to the database
     const savedEmployee = await newEmployee.save();
 
-console.log('image----------',req.body.image);
-console.log('id----------',String(savedEmployee._id));
     // image creation with id and image
     const newEmployeeImage =await new EmployeeImage({image,employee:savedEmployee._id});
     const savedEmployeeImage = await newEmployeeImage.save();
