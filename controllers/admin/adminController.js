@@ -9,18 +9,18 @@ export const getEmployees = async (req, res) => {
       await Employee.find(
         {
           $or: [
-            { "name.firstName": { $regex: name.trim(), $options: "i" } },
-            { "name.lastName": { $regex: name.trim(), $options: "i" } },
+            { "name.firstName": { $regex: name.trim(), $options: "i" }},
+            { "name.lastName": { $regex: name.trim(), $options: "i" }},
           ],
         },
         "-password -terms"
       )
         .then((data) => (employees = data))
-        .catch((e) => console.log("error", e));
+        .catch((e) => e);
     } else {
       await Employee.find({}, "-password -terms")
         .then((data) => (employees = data))
-        .catch((e) => console.log("error", e));
+        .catch((e) => e);
     }
 
     const employeeDataWithEmployeeImages = await Promise.all(
@@ -32,7 +32,6 @@ export const getEmployees = async (req, res) => {
         };
       })
     );
-    console.log("employees data with images", employeeDataWithEmployeeImages);
     res.status(200).json(employeeDataWithEmployeeImages);
   } catch (e) {
     res.status(400).json({ message: "error", error: e });
@@ -46,24 +45,22 @@ export const getEmployee = async (req, res) => {
     if (id) {
       await Employee.find({ id }, "-password -terms")
         .then((data) => (employee = data))
-        .catch((e) => console.log("error", e));
-    } else {
-      await Employee.find({ id }, "-password -terms")
-        .then((data) => (employee = data))
-        .catch((e) => console.log("error", e));
+        .catch((e) => e);
     }
-
-    const employeeDataWithEmployeeImages = await Promise.all(
-      employee.map(async (emp) => {
-        const image = await EmployeeImage.findOne({ employee: emp._id });
-        return {
-          ...emp._doc,
-          image: image ? image.image : null,
-        };
-      })
-    );
-
-    res.status(200).json(employeeDataWithEmployeeImages);
+    if(employee.length){
+      const employeeDataWithEmployeeImages = await Promise.all(
+        employee.map(async (emp) => {
+          const image = await EmployeeImage.findOne({ employee: emp._id });
+          return {
+            ...emp._doc,
+            image: image ? image.image : null,
+          };
+        })
+      )
+    return res.status(200).json(employeeDataWithEmployeeImages);
+  }else{
+    return res.status(204).json({status:"failed",message:"Either Employee id doesn't exist or you provided wrong id please check",data:employee});
+  }
   } catch (e) {
     res.status(400).json({ message: "error", error: e });
   }

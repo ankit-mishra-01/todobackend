@@ -24,10 +24,21 @@ export const removeTodo = async (req, res) => {
 };
 
 export const updateTodo = async (req, res) => {
-  const {_id}= req.body;
-  const updatedTodo = await Todo.findByIdAndUpdate(_id,updatedData,{new:true});
+  const { _id, update } = req.body.data;
+  const updatedTodo = await Todo.findByIdAndUpdate( _id , update , {new:true});
   if (!updatedTodo) {
     return res.status(404).json({ message: `Todo with ID ${_id} not found.` });
   }
   return res.status(200).json(updatedTodo)
+
+
 };
+
+
+export const todoEnums =async(req,res)=>{
+  const enums=await Todo.schema.path('status').enumValues
+  if(enums){
+    return res.status(200).json(enums)
+  }else
+  return res.status(204).json(enums)
+ }
