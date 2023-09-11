@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 import { Employee, EmployeeImage } from "../../models/Employee.js";
 
 export const getEmployees = async (req, res) => {
+
+
   var employees;
   try {
     const { name } = req.params;
@@ -14,12 +16,11 @@ export const getEmployees = async (req, res) => {
           ],
         },
         "-password -terms"
-      )
-        .then((data) => (employees = data))
+      ).then((data) => {employees = data})
         .catch((e) => e);
     } else {
       await Employee.find({}, "-password -terms")
-        .then((data) => (employees = data))
+        .then((data) => {employees = data})
         .catch((e) => e);
     }
 
@@ -77,10 +78,7 @@ export const deleteEmployee = async (req, res) => {
 };
 export const getDashboardData = async (req, res) => {
   var dashboardData = {};
-  console.log("running-------");
   try {
-    console.log("running inside-------");
-
     dashboardData["gender"] = await Employee.aggregate([
       {
         $group: {
@@ -99,8 +97,6 @@ export const getDashboardData = async (req, res) => {
         },
       },
     ]);
-    console.log("data--------", dashboardData);
-
     res.status(200).json(dashboardData);
   } catch (e) {
     res.status(400).json({ message: "error", error: e });

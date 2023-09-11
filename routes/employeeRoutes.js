@@ -17,6 +17,7 @@ employeeRouter.use("/api/employee/changepassword", authenticateEmployee);
 employeeRouter.use("/api/employee/loggedemployee", authenticateEmployee);
 // employeeRouter.use("/api/employee/login",authenticateEmployee)
 
+
 // Public Routes --------------------------------------------------------------------
 // API for employeeController
 employeeRouter.post("/api/employee/register", createEmployee);

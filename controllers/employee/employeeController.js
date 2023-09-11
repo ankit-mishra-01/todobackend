@@ -1,15 +1,17 @@
 import { Employee,EmployeeImage,EmployeeLeave } from "../../models/Employee.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import {ErrorHandler} from "../../middlewares/ErrorHandler.js";
 
 export const createEmployee = async (req, res) => {
   try {
     const { name, email, password, image, terms } = req.body;
     // Check if the email already exists
-    const existingEmployee = await Employee.findOne({ email });
-    if (existingEmployee) {
-      return res.status(400).json({ message: "Email already registered" });
-    }
+
+    // const existingEmployee = await Employee.findOne({ email });
+    // if (existingEmployee) {
+    //   return res.status(400).json({ message: "Email already registered" });
+    // }
 
     // Hash the password before storing it
     const salt = await bcrypt.genSalt(10);
@@ -17,8 +19,8 @@ export const createEmployee = async (req, res) => {
 
     // Create a new employee object
     const { firstName, lastName } = req.body.name;
-    const newEmployee =await new Employee({
-      name: { firstName,lastName },
+    const newEmployee = new Employee({
+      name: { firstName, lastName },
       email,
       password: hashedPassword,
       terms,
@@ -46,9 +48,12 @@ export const createEmployee = async (req, res) => {
       token: token,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error creating employee", error: error.message });
+    // ErrorHandler(error)
+    // console.log('error',error);
+    res.send(error)
+    // res
+    //   .status(500)
+    //   .json({ message: "Error creating employee", error: error.message });
   }
 };
 

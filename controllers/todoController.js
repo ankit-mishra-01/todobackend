@@ -4,9 +4,7 @@ const dataFieldsForFrontend=[
 "_id","title","text","status","createdAt"].join(" ")
 
 export const getTodos = async (req, res) => {
-  console.log("running----------1");
   const todos = await Todo.find({}, dataFieldsForFrontend);
-  console.log("running----------2");
   todos && res.status(200).json(todos);
 };
 
@@ -24,14 +22,23 @@ export const removeTodo = async (req, res) => {
 };
 
 export const updateTodo = async (req, res) => {
-  const { _id, update } = req.body.data;
+  const { _id, update } = req.body;
   const updatedTodo = await Todo.findByIdAndUpdate( _id , update , {new:true});
   if (!updatedTodo) {
     return res.status(404).json({ message: `Todo with ID ${_id} not found.` });
   }
   return res.status(200).json(updatedTodo)
+};
 
+export const filterTodo = async (req, res) => {
+  const filter = req.params;
 
+  // const updatedTodo = await Todo.findByIdAndUpdate( _id , update , {new:true});
+  // if (!updatedTodo) {
+    // return res.status(404).json({ message: `Todo with ID ${_id} not found.` });
+  // }
+  console.log('running-----------',filter);
+  return res.status(200).json(filter)
 };
 
 

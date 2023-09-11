@@ -1,19 +1,24 @@
 import mongoose from "mongoose";
+// import {isEmail} from 'validator'
+import pkg from 'validator';
 
+
+const {isEmail} = pkg;
 // Employee---------------------------------------------------------------------------------
 const employeeSchema = new mongoose.Schema({
   id: String,
   name: { firstName: String, middleName:String, lastName: String },
-  status: { type:String, enum: ["Active", "Inactive"]},
-  
+  status: { type:String, enum: ["Active", "Inactive"] },
   email: {
     type: String,
-    unique: true,
-    required: true,
+    unique: [true,"Email already registered"],
+    required: [true,"Please provide a valid email"],
+    validate:[isEmail,"Please enter a valid Email"]
   },
   password: {
     type: String,
-    required: true,
+    required: [true,"Please provide password"],
+    minlength:[6,"password length should be 6 or more characters"]
   },
   terms: Boolean,
   mobile: {
@@ -38,6 +43,10 @@ const employeeSchema = new mongoose.Schema({
     zip: String,
     country: String,
   },
+  skills:{
+    type:Array,
+  },
+
 });
 
 // Address----------------------------------------------------------------------------------
